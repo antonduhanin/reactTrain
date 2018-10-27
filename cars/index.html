@@ -2,6 +2,10 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
@@ -33,23 +37,43 @@
         
         var Car = React.createClass({
             render: function(){
-                return <li>
+                return <li className="list-group-item">
                             <div>
-                                <div>{this.props.name}</div>
-                                <div>{this.props.owner}</div>
-                                <div>{this.props.age}</div>
+                                <div><h4>Brand: </h4>{this.props.name}</div>
+                                <div><h4>Owner: </h4>{this.props.owner}</div>
+                                <div><h4>Age: </h4>{this.props.age}</div>
                             </div>
                         </li>;
 
             }
         })
         var CarList = React.createClass({
+            getInitialState: function(){
+                return {
+                    displayedCars: CARS
+                };
+            },
+
+            handleSearch: function(event){
+                var searchQuery = event.target.value.toLowerCase();
+                var displayedCars = CARS.filter(function(el){
+                    var searchValue = el.name.toLowerCase();
+                    return searchValue.indexOf(searchQuery) !== -1;
+                });
+                this.setState({
+                    displayedCars: displayedCars
+                });
+            },
+
             render: function () {
                 return (
                     <div>
+                        <div>
+                            <input onChange={this.handleSearch} type="text" className="form-group" />
+                        </div>
                         <ul>
                             {
-                               CARS.map(function(el){
+                                this.state.displayedCars.map(function(el){
                                    return <Car key ={el.id} name = {el.name} age ={el.age} owner={el.owner}/>
                                }) 
                             }
